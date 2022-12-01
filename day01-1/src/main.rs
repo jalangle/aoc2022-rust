@@ -35,11 +35,28 @@ fn part1(path: &String) {
     println!("{}", max_calories.to_string());
 }
 
+fn part2(path: &String) {
+    println!("File: {path}");
+    let lines = file_to_lines(path);
+
+    let mut elf_calories = vec![];
+
+    for elf in lines.split(|element| element.len() == 0) {
+        let calories = elf.iter().map(|s| s.parse::<i32>().unwrap() ).sum::<i32>();
+        elf_calories.push(calories);
+    }
+
+    elf_calories.sort();
+    elf_calories.reverse();
+    let top_three = elf_calories[0..3].iter().sum::<i32>();
+    println!("{}", top_three.to_string());
+}
+
 fn main() {
     let file = std::env::args().nth(1);
 
     match file {
-        Some(file) => part1(&file),
+        Some(file) => part2(&file),
         None => println!("No file"),
     }
 }
