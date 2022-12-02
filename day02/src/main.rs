@@ -22,45 +22,51 @@ pub fn file_to_lines(path: &String) -> Vec<String> {
     lines
 }
 
-fn score_choice1(c: char) -> i32 {
+fn score_choice2(c: char) -> i32 {
     match c {
-        'A' => 0 , // Rock,
-        'B' => 0 , // Paper,
-        'C' => 0 , // Scisors,
-        'X' => 1 , // Rock,
-        'Y' => 2 , // Paper,
-        'Z' => 3 , // Scissors,
+        'A' => 1 , // Rock,
+        'B' => 2 , // Paper,
+        'C' => 3 , // Scisors,
         _ => -1,
+    }
+}
+
+fn translate(c: char) -> char {
+    return match c {
+        'X' => 'A',
+        'Y' => 'B',
+        'Z' => 'C',
+        _ => '0', // shut up, rust
     }
 }
 
 fn score_line1(line: &String) -> i32 {
     // a draw
     let them = line.chars().nth(0).unwrap();
-    let you = line.chars().nth(2).unwrap();
+    let you = translate(line.chars().nth(2).unwrap());
 
-    if you == 'X' && them == 'C' {
-        return 6 + score_choice1(you)
+    if you == 'A' && them == 'C' {
+        return 6 + score_choice2(you)
     }
-    else if you == 'X' && them == 'A' {
-        return 3 + score_choice1(you)
-    }
-
-    else if you == 'Y' && them == 'A' {
-        return 6 + score_choice1(you)
-    }
-    else if you == 'Y' && them == 'B' {
-        return 3 + score_choice1(you)
+    else if you == 'A' && them == 'A' {
+        return 3 + score_choice2(you)
     }
 
-    else if you == 'Z' && them == 'B' {
-        return 6 + score_choice1(you)
+    else if you == 'B' && them == 'A' {
+        return 6 + score_choice2(you)
     }
-    else if you == 'Z' && them == 'C' {
-        return 3 + score_choice1(you)
+    else if you == 'B' && them == 'B' {
+        return 3 + score_choice2(you)
     }
 
-    return score_choice1(you)
+    else if you == 'C' && them == 'B' {
+        return 6 + score_choice2(you)
+    }
+    else if you == 'C' && them == 'C' {
+        return 3 + score_choice2(you)
+    }
+
+    return score_choice2(you)
 }
 
 fn part1(path: &String) {
@@ -70,14 +76,6 @@ fn part1(path: &String) {
     println!("{}", score);
 }
 
-fn score_choice2(c: char) -> i32 {
-    match c {
-        'A' => 1 , // Rock,
-        'B' => 2 , // Paper,
-        'C' => 3 , // Scisors,
-        _ => -1,
-    }
-}
 
 fn translate2(t: char, s: char) -> char {
     if s == 'X' /* lose */{
