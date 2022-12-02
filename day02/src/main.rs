@@ -22,7 +22,7 @@ pub fn file_to_lines(path: &String) -> Vec<String> {
     lines
 }
 
-fn score_choice2(c: char) -> i32 {
+fn score_choice(c: char) -> i32 {
     match c {
         'A' => 1 , // Rock,
         'B' => 2 , // Paper,
@@ -46,27 +46,27 @@ fn score_line1(line: &String) -> i32 {
     let you = translate(line.chars().nth(2).unwrap());
 
     if you == 'A' && them == 'C' {
-        return 6 + score_choice2(you)
+        return 6 + score_choice(you)
     }
     else if you == 'A' && them == 'A' {
-        return 3 + score_choice2(you)
+        return 3 + score_choice(you)
     }
 
     else if you == 'B' && them == 'A' {
-        return 6 + score_choice2(you)
+        return 6 + score_choice(you)
     }
     else if you == 'B' && them == 'B' {
-        return 3 + score_choice2(you)
+        return 3 + score_choice(you)
     }
 
     else if you == 'C' && them == 'B' {
-        return 6 + score_choice2(you)
+        return 6 + score_choice(you)
     }
     else if you == 'C' && them == 'C' {
-        return 3 + score_choice2(you)
+        return 3 + score_choice(you)
     }
 
-    return score_choice2(you)
+    return score_choice(you)
 }
 
 fn part1(path: &String) {
@@ -105,27 +105,27 @@ fn score_line2(line: &String) -> i32 {
     let you = translate2(them, strategy);
 
     if you == 'A' && them == 'C' {
-        return 6 + score_choice2(you)
+        return 6 + score_choice(you)
     }
     else if you == 'A' && them == 'A' {
-        return 3 + score_choice2(you)
+        return 3 + score_choice(you)
     }
 
     else if you == 'B' && them == 'A' {
-        return 6 + score_choice2(you)
+        return 6 + score_choice(you)
     }
     else if you == 'B' && them == 'B' {
-        return 3 + score_choice2(you)
+        return 3 + score_choice(you)
     }
 
     else if you == 'C' && them == 'B' {
-        return 6 + score_choice2(you)
+        return 6 + score_choice(you)
     }
     else if you == 'C' && them == 'C' {
-        return 3 + score_choice2(you)
+        return 3 + score_choice(you)
     }
 
-    return score_choice2(you)
+    return score_choice(you)
 }
 
 fn part2(path: &String) {
