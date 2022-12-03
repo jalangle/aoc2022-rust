@@ -121,14 +121,22 @@ fn part1(path: &String) {
 
 fn part2(path: &String) {
     println!("File: {path}");
-    let lines = file_to_lines(path);
+    let rucksacks = file_to_lines(path);
+    let mut scores : Vec<i32> = vec![];
+    for r in rucksacks.chunks(3) {
+        let x = both_contain1(r[0].chars().collect(), r[1].chars().collect());
+        let y = both_contain1(x, r[2].chars().collect());
+        scores.push(value1(y[0]));
+    }  
+    let score : i32 = scores.iter().sum();
+    println!("{}", score);
 }
 
 fn main() {
     let file = std::env::args().nth(1);
 
     match file {
-        Some(file) => part1(&file),
+        Some(file) => part2(&file),
         None => println!("No file"),
     }
 }
