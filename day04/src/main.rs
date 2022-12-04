@@ -55,13 +55,26 @@ fn part1(path: &String) {
 fn part2(path: &String) {
     println!("File: {path}");
     let lines = file_to_lines(path);
+    let mut count : i32 = 0;
+    for l in lines {
+        let elves = l.split(",").collect::<Vec<&str>>().iter().map(|x| x.to_string()).collect::<Vec<String>>();
+        let first_range = set_from_string(&elves[0]);
+        let second_range = set_from_string(&elves[1]);
+
+        let intersection = first_range.intersection(&second_range).collect::<Vec<&i32>>();
+        if intersection.len() > 0 {
+            count += 1;
+        }
+    }
+
+    println!("{}", count);
 }
 
 fn main() {
     let file = std::env::args().nth(1);
 
     match file {
-        Some(file) => part1(&file),
+        Some(file) => part2(&file),
         None => println!("No file"),
     }
 }
