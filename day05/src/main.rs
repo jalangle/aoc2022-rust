@@ -65,6 +65,10 @@ fn parse_instruction(i: String) -> (usize, usize, usize) {
         return (count, from_bucket, to_bucket);
 }
 
+fn solution_str(stacks: Vec<Vec<String>>) -> String {
+    return stacks.iter().map(|stack| return stack.last().unwrap().clone() ).collect::<Vec<String>>().join(" ");
+}
+
 fn part1(path: &String) {
     println!("File: {path}");
     let lines = file_to_lines(path);
@@ -80,9 +84,7 @@ fn part1(path: &String) {
         }
     }
 
-    for mut stack in stacks {
-        println!("{}", stack.pop().unwrap());
-    }
+    println!("{}", solution_str(stacks));
 }
 
 fn part2(path: &String) {
@@ -105,16 +107,14 @@ fn part2(path: &String) {
         }
     }
 
-    for mut stack in stacks {
-        println!("{}", stack.pop().unwrap());
-    }
+    println!("{}", solution_str(stacks));
 }
 
 fn main() {
     let file = std::env::args().nth(1);
 
     match file {
-        Some(file) => part2(&file),
+        Some(file) => part1(&file),
         None => println!("No file"),
     }
 }
