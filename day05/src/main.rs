@@ -28,13 +28,10 @@ fn remove_whitespace(s: &mut String) {
     s.retain(|c| !c.is_whitespace() );
 }
 
-fn part1(path: &String) {
-    println!("File: {path}");
-    let lines = file_to_lines(path);
-
+fn lines_to_parts(lines: Vec<String>) -> (Vec<Vec<String>>, Vec<String>) {
     let sep = lines.iter().position(|s| s == "" ).unwrap();
     let buckets = &lines[0..sep-1];
-    let instructions = &lines[sep+1..];
+    let instructions : Vec<String> = (&lines[sep+1..]).to_vec();
 
     let mut stacks : Vec<Vec<String>> = vec![];
     let count_of_buckets = buckets[0].chars().collect::<Vec<char>>().chunks(4).count();
@@ -55,12 +52,15 @@ fn part1(path: &String) {
             index+=1;
         }
     }
-    /*
-    for stack in stacks {
-        println!("{}", stack.join(" "));
-        println!("-----");
-    }
-    */
+
+    return (stacks, instructions);
+}
+
+fn part1(path: &String) {
+    println!("File: {path}");
+    let lines = file_to_lines(path);
+
+    let (mut stacks, instructions) = lines_to_parts(lines);
 
     for i in instructions {
         println!("-----");
@@ -90,35 +90,7 @@ fn part2(path: &String) {
     println!("File: {path}");
     let lines = file_to_lines(path);
 
-    let sep = lines.iter().position(|s| s == "" ).unwrap();
-    let buckets = &lines[0..sep-1];
-    let instructions = &lines[sep+1..];
-
-    let mut stacks : Vec<Vec<String>> = vec![];
-    let count_of_buckets = buckets[0].chars().collect::<Vec<char>>().chunks(4).count();
-
-    for i in 0..count_of_buckets {
-        stacks.push(Vec::<String>::new());
-    }
-
-    for x in buckets {
-        let mut index : usize = 0;
-
-        for y in x.chars().collect::<Vec<char>>().chunks(4) {
-            let mut s = String::from_iter(y);
-            remove_whitespace(&mut s);
-            if s != "" {
-                stacks[index].insert(0, s);
-            }
-            index+=1;
-        }
-    }
-    /*
-    for stack in stacks {
-        println!("{}", stack.join(" "));
-        println!("-----");
-    }
-    */
+    let (mut stacks, instructions) = lines_to_parts(lines);
 
     for i in instructions {
         println!("-----");
