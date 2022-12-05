@@ -63,8 +63,6 @@ fn part1(path: &String) {
     let (mut stacks, instructions) = lines_to_parts(lines);
 
     for i in instructions {
-        println!("-----");
-        println!("{}", i);
         let parts = i.split(" ").collect::<Vec<&str>>();
         let count = parts[1].parse::<usize>().unwrap();
         let from_bucket = parts[3].parse::<usize>().unwrap() - 1;
@@ -74,13 +72,8 @@ fn part1(path: &String) {
             let e = stacks[from_bucket].pop().unwrap();
             stacks[to_bucket].push(e);
         }
-
-        for stack in &stacks {
-            println!("{}", stack.join(" "));
-        }
     }
 
-    println!("=====");
     for mut stack in stacks {
         println!("{}", stack.pop().unwrap());
     }
@@ -93,8 +86,6 @@ fn part2(path: &String) {
     let (mut stacks, instructions) = lines_to_parts(lines);
 
     for i in instructions {
-        println!("-----");
-        println!("{}", i);
         let parts = i.split(" ").collect::<Vec<&str>>();
         let count = parts[1].parse::<usize>().unwrap();
         let from_bucket = parts[3].parse::<usize>().unwrap() - 1;
@@ -109,14 +100,8 @@ fn part2(path: &String) {
         for e in temp {
             stacks[to_bucket].push(e);
         }
-
-        for stack in &stacks {
-            println!("{}", stack.join(" "));
-        }
     }
 
-
-    println!("=====");
     for mut stack in stacks {
         println!("{}", stack.pop().unwrap());
     }
