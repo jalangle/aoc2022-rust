@@ -56,6 +56,15 @@ fn lines_to_parts(lines: Vec<String>) -> (Vec<Vec<String>>, Vec<String>) {
     return (stacks, instructions);
 }
 
+fn parse_instruction(i: String) -> (usize, usize, usize) {
+        let parts = i.split(" ").collect::<Vec<&str>>();
+        let count = parts[1].parse::<usize>().unwrap();
+        let from_bucket = parts[3].parse::<usize>().unwrap() - 1;
+        let to_bucket = parts[5].parse::<usize>().unwrap() - 1;
+
+        return (count, from_bucket, to_bucket);
+}
+
 fn part1(path: &String) {
     println!("File: {path}");
     let lines = file_to_lines(path);
@@ -63,10 +72,7 @@ fn part1(path: &String) {
     let (mut stacks, instructions) = lines_to_parts(lines);
 
     for i in instructions {
-        let parts = i.split(" ").collect::<Vec<&str>>();
-        let count = parts[1].parse::<usize>().unwrap();
-        let from_bucket = parts[3].parse::<usize>().unwrap() - 1;
-        let to_bucket = parts[5].parse::<usize>().unwrap() - 1;
+        let (count, from_bucket, to_bucket) = parse_instruction(i);
 
         for c in 0..count {
             let e = stacks[from_bucket].pop().unwrap();
@@ -86,10 +92,7 @@ fn part2(path: &String) {
     let (mut stacks, instructions) = lines_to_parts(lines);
 
     for i in instructions {
-        let parts = i.split(" ").collect::<Vec<&str>>();
-        let count = parts[1].parse::<usize>().unwrap();
-        let from_bucket = parts[3].parse::<usize>().unwrap() - 1;
-        let to_bucket = parts[5].parse::<usize>().unwrap() - 1;
+        let (count, from_bucket, to_bucket) = parse_instruction(i);
 
         let mut temp : Vec<String> = vec![];
         for c in 0..count {
