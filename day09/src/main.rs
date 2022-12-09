@@ -95,20 +95,81 @@ fn part1(path: &String) {
         }
     }
 
-    println!("{}", tail_points.len());
+    println!("{}", tail_points.len()); // test1 = 13, test2 = 88, input1 = 5878
 }
 
-
 fn part2(path: &String) {
+    let error_point = Point{x:-10000,y:-10000};
+
     println!("File: {path}");
     let lines = file_to_lines(path);
+
+
+    let mut tail_points : HashSet<Point> = HashSet::new();
+
+    let cknots = 10;
+    let mut rope : Vec<Point> = vec![];
+    for x in 0..cknots {
+        rope.push(Point{x:0,y:0})
+    }
+
+    for l in lines {
+
+        let (direction, distance) = parse_line(&l);
+        let initial = direction_to_diff(&direction);
+
+        for _ in 0..distance {
+            rope[0] = rope[0] + initial;
+
+            assert!(rope.len() > 1);
+            for k in 1..rope.len() {
+
+                if rope[k].abuts(&rope[k-1]) { // if this knot is adjacent to the previous knot, stop processing
+                    break;
+                }
+
+                let change = match rope[k-1] - rope[k] {
+                    Point{x:-1,y:2} => Point{x:-1,y:1},
+                    Point{x:0,y:2} => Point{x:0,y:1},
+                    Point{x:1,y:2} => Point{x:1,y:1},
+
+                    Point{x:-1,y:-2} => Point{x:-1,y:-1},
+                    Point{x:0,y:-2} => Point{x:0,y:-1},
+                    Point{x:1,y:-2} => Point{x:1,y:-1},
+
+                    Point{x:2,y:-1} => Point{x:1,y:-1},
+                    Point{x:2,y:0} => Point{x:1,y:0},
+                    Point{x:2,y:1} => Point{x:1,y:1},
+
+                    Point{x:-2,y:-1} => Point{x:-1,y:-1},
+                    Point{x:-2,y:0} => Point{x:-1,y:0},
+                    Point{x:-2,y:1} => Point{x:-1,y:1},
+
+                    // pure diagonal pull.  Only matters for knots > 2
+                    Point{x:2,y:2} => Point{x:1,y:1},
+                    Point{x:2,y:-2} => Point{x:1,y:-1},
+                    Point{x:-2,y:2} => Point{x:-1,y:1},
+                    Point{x:-2,y:-2} => Point{x:-1,y:-1},
+
+                    // something large for the obvious error code
+                    _ => error_point,
+                };
+                assert!(change != error_point);
+                
+                rope[k] = rope[k] + change;
+            }
+
+            tail_points.insert(rope[cknots-1]);
+        }
+    }
+    println!("{}", tail_points.len()); //2621 too high
 }
 
 fn main() {
     let file = std::env::args().nth(1);
 
     match file {
-        Some(file) => part1(&file),
+        Some(file) => part2(&file),
         None => println!("No file"),
     }
 }
