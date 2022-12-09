@@ -2,28 +2,15 @@
 #![allow(unused_variables)]
 #![allow(unused_mut)]
 
-use std::fs::File;
-use std::io::Read;
-use std::path::Path;
 use std::ops::{Add, Sub};
 use std::collections::HashSet;
 
-pub fn file_to_lines(path: &String) -> Vec<String> {
-    let path = Path::new(path);
-
-    let mut file = match File::open(&path) {
-        Err(why) => panic!("couldn't open {}: {}", path.display(), why),
-        Ok(file) => file,
-    };
-
-    let mut s = String::new();
-    match file.read_to_string(&mut s) {
-        Err(why) => panic!("couldn't read {}: {}", path.display(), why),
-        Ok(_) => {}
-    };
-
-    let lines : Vec<String> = s.split("\n").collect::<Vec<&str>>().iter().map(|x| x.to_string()).collect();
-    lines
+fn file_to_lines() -> Vec<String> {
+    let bytes = include_bytes!("input1.txt");
+    let lines = String::from_utf8_lossy(bytes)
+                .split("\n")
+                .collect::<Vec<&str>>().iter().map(|x| x.to_string()).collect();
+    return lines
 }
 
 fn parse_line(line: &String) -> (String, i32) {
@@ -70,9 +57,8 @@ fn direction_to_diff(direction: &str) -> Point {
     }
 }
 
-fn part1(path: &String) {
-    println!("File: {path}");
-    let lines = file_to_lines(path);
+fn part1() {
+    let lines = file_to_lines();
 
     let mut head = Point {x: 0, y: 0};
     let mut tail = Point {x: 0, y: 0};
@@ -98,11 +84,10 @@ fn part1(path: &String) {
     println!("{}", tail_points.len()); // test1 = 13, test2 = 88, input1 = 5878
 }
 
-fn part2(path: &String) {
+fn part2() {
     let error_point = Point{x:-10000,y:-10000};
 
-    println!("File: {path}");
-    let lines = file_to_lines(path);
+    let lines = file_to_lines();
 
 
     let mut tail_points : HashSet<Point> = HashSet::new();
@@ -162,14 +147,15 @@ fn part2(path: &String) {
             tail_points.insert(rope[cknots-1]);
         }
     }
-    println!("{}", tail_points.len()); //2621 too high
+    println!("{}", tail_points.len());
 }
 
 fn main() {
-    let file = std::env::args().nth(1);
+    let part = std::env::args().nth(1).unwrap();
 
-    match file {
-        Some(file) => part2(&file),
-        None => println!("No file"),
+    if part == "1" {
+        part1();
+    } else if part == "2" {
+        part2();
     }
 }
