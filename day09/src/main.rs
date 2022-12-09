@@ -57,42 +57,13 @@ fn direction_to_diff(direction: &str) -> Point {
     }
 }
 
-fn part1() {
-    let lines = file_to_lines();
-
-    let mut head = Point {x: 0, y: 0};
-    let mut tail = Point {x: 0, y: 0};
-    let mut tail_points : HashSet<Point> = HashSet::new();
-
-    for l in lines {
-        let (direction, distance) = parse_line(&l);
-        //println!("{} {}", direction, distance);
-
-        let diff = direction_to_diff(&direction);
-
-        for i in 0..distance {
-            let tail_diff = head - tail;
-            head = head + diff;
-            if !tail.abuts(&head) {
-                tail = tail + tail_diff;
-            }
-            tail_points.insert(tail);
-            //println!("{:?} | {:?}", head, tail);
-        }
-    }
-
-    println!("{}", tail_points.len()); // test1 = 13, test2 = 88, input1 = 5878
-}
-
-fn part2() {
+fn work(cknots: usize) {
     let error_point = Point{x:-10000,y:-10000};
 
     let lines = file_to_lines();
 
-
     let mut tail_points : HashSet<Point> = HashSet::new();
 
-    let cknots = 10;
     let mut rope : Vec<Point> = vec![];
     for x in 0..cknots {
         rope.push(Point{x:0,y:0})
@@ -148,6 +119,14 @@ fn part2() {
         }
     }
     println!("{}", tail_points.len());
+}
+
+fn part1() {
+    work(2) // test1 = 13, test2 = 88, input1 = 5878
+}
+
+fn part2() {
+    work(10) // test1 = 1, test2 = 36, input1 = 2405
 }
 
 fn main() {
