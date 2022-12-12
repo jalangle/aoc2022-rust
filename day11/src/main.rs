@@ -4,17 +4,17 @@
 
 use std::collections::VecDeque;
 
-type Operation = fn(i32) -> i32;
+type Operation = fn(u64) -> u64;
 
 #[derive(Debug)]
 struct Monkey {
     id: i32,
-    items : VecDeque<i32>,
+    items : VecDeque<u64>,
 
     operation : Operation,
 
     /* test  */
-    divisible_by : i32,
+    divisible_by : u64,
     to_true : usize,
     to_false : usize,
 
@@ -153,10 +153,9 @@ fn input1data() -> Vec<Monkey> {
 
 fn part1() {
     let mut monkeys = input1data();
-        for m in 0..monkeys.len() {
-            println!("{:?}", monkeys[m]);
-        }
-
+    for m in 0..monkeys.len() {
+        println!("{:?}", monkeys[m]);
+    }
 
     for round in 1..21 {
 
@@ -168,13 +167,82 @@ fn part1() {
             // my relief
             monkeys[m].items = monkeys[m].items.iter().map(|x| x / 3).collect();
 
-            let mut true_items : VecDeque<i32> = VecDeque::new();
-            let mut false_items : VecDeque<i32> = VecDeque::new();
+            let mut true_items : VecDeque<u64> = VecDeque::new();
+            let mut false_items : VecDeque<u64> = VecDeque::new();
 
             for _ in 0..monkeys[m].items.len() {
                 let monkey : &mut Monkey = &mut monkeys[m];
                 let item = monkey.items.pop_front().unwrap();
-                let x : i32 = item % monkey.divisible_by;
+                let x : u64 = item % monkey.divisible_by;
+                if x == 0 {
+                    true_items.push_back(item);
+                }
+                else {
+                    false_items.push_back(item);
+                }
+            }
+            let id_to = monkeys[m].to_true;
+            monkeys[id_to].items.append(&mut true_items);
+
+            let id_false = monkeys[m].to_false;
+            monkeys[id_false].items.append(&mut false_items);
+
+        }
+/*
+        println!("--------  ROUND {} ------------------", round);
+        for m in 0..monkeys.len() {
+            println!("{:?}", monkeys[m]);
+        }
+*/
+    }
+
+    println!("--------  SORTED ------------------");
+    monkeys.sort_by(|a,b| b.inspections.cmp(&a.inspections));
+    for m in 0..monkeys.len() {
+        println!("{:?}", monkeys[m]);
+    }
+    println!("{}", monkeys[0].inspections * monkeys[1].inspections);
+}
+
+fn truncate(cm: &u64, i: &u64) -> u64 {
+    if i > cm {
+        return i % cm;
+    }
+    return *i
+}
+
+fn part2() {
+    let mut monkeys = input1data();
+        for m in 0..monkeys.len() {
+            println!("{:?}", monkeys[m]);
+        }
+
+    let mut common_mult = 1;
+    for m in &monkeys {
+        common_mult *= m.divisible_by;
+    }
+
+
+    for round in 1..10001 {
+        //println!("--------  ROUND {} ------------------", round);
+
+        for m in 0..monkeys.len() {
+            //println!("{:?}", monkeys[m]);
+            // do inspections
+            monkeys[m].items = monkeys[m].items.iter().map(|x| (monkeys[m].operation)(*x)).collect();
+            // keep track of number of inspections
+            //println!("INSPECTED: {}", monkeys[m].items.len());
+            monkeys[m].inspections += monkeys[m].items.len();
+            // my relief
+            monkeys[m].items = monkeys[m].items.iter().map(|x| return truncate(&common_mult, x) ).collect();
+
+            let mut true_items : VecDeque<u64> = VecDeque::new();
+            let mut false_items : VecDeque<u64> = VecDeque::new();
+
+            for _ in 0..monkeys[m].items.len() {
+                let monkey : &mut Monkey = &mut monkeys[m];
+                let item = monkey.items.pop_front().unwrap();
+                let x : u64 = item % monkey.divisible_by;
                 if x == 0 {
                     true_items.push_back(item);
                 }
@@ -204,9 +272,6 @@ fn part1() {
     }
     println!("{}", monkeys[0].inspections * monkeys[1].inspections);
 
-}
-
-fn part2() {
 }
 
 fn main() {
